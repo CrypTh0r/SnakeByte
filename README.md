@@ -9,6 +9,6 @@
 
 #Watch the Score tab to track your progress
 
-#Game Controls for Desktop - press Up, Down, Left, Right arrows on your keyboard to move the snake
+#Game Controls for Desktop - Press Up, Down, Left, Right arrows on your keyboard to move the snake
 
-#Game Controls for Mobile - press Up, Down, Left, Right directly on your screen to move the snake
+#Game Controls for Mobile - Press Up, Down, Left, Right directly on your screen to move the snake
