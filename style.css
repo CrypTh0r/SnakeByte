@@ -1,0 +1,67 @@
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #e0e0e0; /* Greyish color for the area around the game */
+}
+
+#game-area {
+    width: 320px; /* Adjust as per the design */
+    height: 320px; /* Adjust as per the design */
+    background-image: url('https://i.postimg.cc/68X0X7bN/background.jpg'); /* Background image for game area */
+    background-size: cover;
+    position: relative;
+}
+
+.snake {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background-image: url('https://i.postimg.cc/XZqzyGfy/snake.png');
+    background-size: cover;
+}
+
+.food {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background-image: url('https://i.postimg.cc/NKryt2sM/food.png');
+    background-size: cover;
+}
+
+#reset-button,
+#pause-button,
+#score {
+    font-size: 15px;
+    padding: 10px 20px;
+    background: #6e7888;
+    border: none;
+    color: #222738;
+    border-radius: 40px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+#reset-button {
+    position: absolute;
+    bottom: 42px;
+    left: 10px;
+}
+
+#pause-button {
+    position: absolute;
+    bottom: 42px;
+    left: -210px;
+    margin-left: 500px;
+}
+
+#score {
+    position: absolute;
+    font-size: 15px;
+    padding: 10px 20px;
+    top: 60px;
+    left: 300px;
+    
+    color: black;
+}
