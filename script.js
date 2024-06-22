@@ -4,6 +4,11 @@ let food = { x: 100, y: 100 };
 let direction = 'right';
 let gamePaused = false;
 let score = 0;
+let highScore = 0;
+let intervalSpeed = 11; // Initial interval speed
+let speedIncrease = -0.1; // Amount to decrease interval speed by
+
+let gameInterval = setInterval(gameLoop, 1000 / intervalSpeed); // Initial game interval
 
 function draw() {
     gameArea.innerHTML = '';
@@ -46,8 +51,26 @@ function update() {
             break;
     }
 
-    if (newHead.x < 0 || newHead.x >= gameArea.clientWidth || newHead.y < 0 || newHead.y >= gameArea.clientHeight) {
-        return;
+    for (let i = 1; i < snake.length; i++) {
+        if (newHead.x === snake[i].x && newHead.y === snake[i].y) {
+            gamePaused = true;
+            document.getElementById('game-over').classList.add('show');
+            document.getElementById('current-score').innerText = score;
+            highScore = Math.max(score, highScore);
+            document.getElementById('high-score').innerText = highScore;
+            return;
+        }
+    }
+
+    if (newHead.x < 0) {
+        newHead.x = gameArea.clientWidth - 10;
+    } else if (newHead.x >= gameArea.clientWidth) {
+        newHead.x = 0;
+    }
+    if (newHead.y < 0) {
+        newHead.y = gameArea.clientHeight - 10;
+    } else if (newHead.y >= gameArea.clientHeight) {
+        newHead.y = 0;
     }
 
     if (newHead.x === food.x && newHead.y === food.y) {
@@ -65,6 +88,12 @@ function updateScore() {
     const scoreElement = document.getElementById('score');
     score++;
     scoreElement.innerText = 'Score: ' + score;
+
+    if (score % 1 === 0) {
+        intervalSpeed -= speedIncrease;
+        clearInterval(gameInterval);
+        gameInterval = setInterval(gameLoop, 1000 / intervalSpeed);
+    }
 }
 
 function handleTouchStart(event) {
@@ -74,10 +103,15 @@ function handleTouchStart(event) {
     const deltaX = x - snake[0].x;
     const deltaY = y - snake[0].y;
 
+    let newDirection;
     if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        direction = deltaX > 0 ? 'right' : 'left';
+        newDirection = deltaX > 0 ? 'right' : 'left';
     } else {
-        direction = deltaY > 0 ? 'down' : 'up';
+        newDirection = deltaY > 0 ? 'down' : 'up';
+    }
+
+    if (newDirection && newDirection !== getOppositeDirection(direction)) {
+        direction = newDirection;
     }
 }
 
@@ -91,25 +125,46 @@ function resetGame() {
     direction = 'right';
     score = 0;
     gamePaused = false;
+    intervalSpeed = 12; // Reset interval speed back to 12
 
     const scoreElement = document.getElementById('score');
     scoreElement.innerText = 'Score: ' + score;
+
+    document.getElementById('game-over').classList.remove('show');
+
+    clearInterval(gameInterval);
+    gameInterval = setInterval(gameLoop, 1000 / intervalSpeed); // Set the game interval with the original speed
 }
 
-document.addEventListener('touchstart', handleTouchStart);
+function getOppositeDirection(dir) {
+    switch (dir) {
+        case 'up':
+            return 'down';
+        case 'down':
+            return 'up';
+        case 'left':
+            return 'right';
+        case 'right':
+            return 'left';
+        default:
+            return null;
+    }
+}
+
 document.addEventListener('keydown', (event) => {
+    let newDirection;
     switch (event.key) {
         case 'ArrowUp':
-            direction = 'up';
+            newDirection = 'up';
             break;
         case 'ArrowDown':
-            direction = 'down';
+            newDirection = 'down';
             break;
         case 'ArrowLeft':
-            direction = 'left';
+            newDirection = 'left';
             break;
         case 'ArrowRight':
-            direction = 'right';
+            newDirection = 'right';
             break;
         case ' ':
             togglePause();
@@ -117,11 +172,15 @@ document.addEventListener('keydown', (event) => {
         default:
             break;
     }
+
+    if (newDirection && newDirection !== getOppositeDirection(direction)) {
+        direction = newDirection;
+    }
 });
+
+document.addEventListener('touchstart', handleTouchStart);
 
 function gameLoop() {
     update();
     draw();
 }
-
-setInterval(gameLoop, 1000 / 10);
